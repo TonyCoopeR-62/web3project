@@ -24,11 +24,23 @@ module.exports = {
   ],
   rules: {
     'react/jsx-uses-react': 'warn',
-    'react/jsx-uses-vars': 'error',
-    'semi': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'warn',
+    'react/jsx-uses-vars': 'warn',
+    semi: 'off',
     '@typescript-eslint/semi': [2, 'always'],
-    '@typescript-eslint/member-delimiter-style': 'error',
+    '@typescript-eslint/member-delimiter-style': ['warn', {
+      multiline: {
+        delimiter: 'semi',
+        requireLast: true
+      },
+      singleline: {
+        delimiter: 'semi',
+        requireLast: true,
+      }
+    }],
     '@typescript-eslint/explicit-function-return-type': 'warn',
     '@typescript-eslint/restrict-template-expressions': 'warn',
+    'no-multiple-empty-lines': ["error", { "max": 2, "maxEOF": 1 }]
   }
 }
