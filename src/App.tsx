@@ -1,6 +1,6 @@
-import {Loader, Navbar, Services, Welcome, Transactions, Footer} from './components';
+import { Loader, Navbar, Services, Welcome, Transactions, Footer } from './components';
 
-const App = () => {
+const App = (): JSX.Element => {
   return (
     <div className="min-h-screen">
       <div className='gradient-bg-welcome'>
@@ -11,7 +11,7 @@ const App = () => {
       <Transactions />
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
