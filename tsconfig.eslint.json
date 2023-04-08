@@ -1,0 +1,9 @@
+{
+    "extends": "./tsconfig.json",
+    "include": [
+      "src",
+      "smart_contracts",
+      ".eslintrc.js"
+    ],
+    "exclude": ["vite.config.ts"]
+  }
