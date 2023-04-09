@@ -1,8 +1,9 @@
+import React, { type ChangeEvent, type EventHandler, type InputHTMLAttributes, type ChangeEventHandler, useContext } from 'react';
 import { AiFillPlayCircle } from 'react-icons/ai';
 import { SiE, SiEthereum } from 'react-icons/si';
 import { BsInfoCircle } from 'react-icons/bs';
 import { Loader } from './';
-import React, { type ChangeEvent, type EventHandler, type InputHTMLAttributes, type ChangeEventHandler } from 'react';
+import { TransactionContext } from '../context/TransactionContext';
 
 interface InputProps extends InputHTMLAttributes<Text> {
   placeholder: string;
@@ -24,6 +25,11 @@ const Input = ({ placeholder, name, type, value, handleChange }: InputProps): JS
 );
 
 const Welcome = (): JSX.Element => {
+  const { value } = useContext(TransactionContext);
+  console.log({
+    value
+  });
+
   const connectWallet = (): void => {
 
   };

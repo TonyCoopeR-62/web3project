@@ -5,9 +5,9 @@ import logo from '../../images/logo.png';
 import { useState } from 'react';
 
 interface NavbarItemProps {
-  title: string
-  classProps?: string
-  isMobile?: boolean
+  title: string;
+  classProps?: string;
+  isMobile?: boolean;
 }
 
 const navList: string[] = ['Market', 'Exchange', 'Tutorial', 'Wallets'];

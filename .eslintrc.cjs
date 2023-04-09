@@ -5,11 +5,17 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    'plugin:react/recommended',
     'react-app',
-    'standard-with-typescript',
-    'plugin:react/jsx-runtime'
+    'standard-with-typescript'
   ],
+  overrides: [{
+    files: ['*.ts', '*.tsx'],
+    extends: ['plugin:react/jsx-runtime', 'plugin:react/recommended'],
+    rules: {
+      'react/react-in-jsx-scope': 0,
+      '@typescript-eslint/restrict-template-expressions': 'warn'
+    }
+  }],
   parserOptions: {
     ecmaVersion: 'latest',
     project: ['./tsconfig.eslint.json'],
@@ -36,11 +42,11 @@ module.exports = {
       },
       singleline: {
         delimiter: 'semi',
-        requireLast: true,
+        requireLast: true
       }
     }],
     '@typescript-eslint/explicit-function-return-type': 'warn',
-    '@typescript-eslint/restrict-template-expressions': 'warn',
-    'no-multiple-empty-lines': ["error", { "max": 2, "maxEOF": 1 }]
+    'no-multiple-empty-lines': ['error', { max: 2, maxEOF: 1 }],
+    'react/react-in-jsx-scope': 'off'
   }
-}
+};
