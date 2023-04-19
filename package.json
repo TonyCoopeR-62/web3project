@@ -11,7 +11,8 @@
     "lint:fix": "eslint . --fix --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "ethers": "^6.3.0",
+    "@metamask/providers": "^10.2.1",
+    "ethers": "^5.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0"

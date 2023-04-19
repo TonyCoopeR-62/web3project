@@ -47,6 +47,7 @@ module.exports = {
     }],
     '@typescript-eslint/explicit-function-return-type': 'warn',
     'no-multiple-empty-lines': ['error', { max: 2, maxEOF: 1 }],
-    'react/react-in-jsx-scope': 'off'
+    'react/react-in-jsx-scope': 'off',
+    '@typescript-eslint/strict-boolean-expressions': 'off'
   }
 };

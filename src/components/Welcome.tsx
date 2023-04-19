@@ -3,7 +3,7 @@ import { AiFillPlayCircle } from 'react-icons/ai';
 import { SiE, SiEthereum } from 'react-icons/si';
 import { BsInfoCircle } from 'react-icons/bs';
 import { Loader } from './';
-import { TransactionContext } from '../context/TransactionContext';
+import { TransactionContext, type defaultValue } from '../context/TransactionContext';
 
 interface InputProps extends InputHTMLAttributes<Text> {
   placeholder: string;
@@ -25,14 +25,12 @@ const Input = ({ placeholder, name, type, value, handleChange }: InputProps): JS
 );
 
 const Welcome = (): JSX.Element => {
-  const { value } = useContext(TransactionContext);
+  const { connectWallet, currentAccount } = useContext(TransactionContext) as defaultValue;
+
   console.log({
-    value
+    connectWallet
   });
 
-  const connectWallet = (): void => {
-
-  };
   const handleChangeInput = () => {
 
   };
@@ -51,11 +49,14 @@ const Welcome = (): JSX.Element => {
           <p className='text-left mt-5 text-white font-light md:w-9/12 w-11/12 text-base'>
             Explore the crypto world. But and sell cryptocurrencies easily on Krypto.
           </p>
-          <button type='button' onClick={connectWallet} className='flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]'>
+          {!currentAccount && (
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            <button type='button' onClick={connectWallet} className='flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]'>
             <p className='text-white text-base font-semibold'>
               Connect Wallet
             </p>
           </button>
+          )}
           <div className='grid sm:grid-cols-3 grid-cols-2 w-full mt-10'>
             <div className={`rounded-tl-xl ${commonStyles}`}>
               Reliability
@@ -88,7 +89,7 @@ const Welcome = (): JSX.Element => {
                 </div>
                 <div>
                   <p className='text-white font-light text-sm'>
-                    0x0asaed33r3wf....adf3
+                    {currentAccount.slice(0, 8)}
                   </p>
                   <p className='text-white font-semibold text-lg mt-1'>
                     Ethereum
