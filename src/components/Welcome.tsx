@@ -1,9 +1,10 @@
-import React, { type ChangeEvent, type EventHandler, type InputHTMLAttributes, type ChangeEventHandler, useContext } from 'react';
+import type React from 'react';
+import { type ChangeEvent, type EventHandler, type InputHTMLAttributes, type ChangeEventHandler, useContext } from 'react';
 import { AiFillPlayCircle } from 'react-icons/ai';
 import { SiE, SiEthereum } from 'react-icons/si';
 import { BsInfoCircle } from 'react-icons/bs';
 import { Loader } from './';
-import { TransactionContext, type defaultValue } from '../context/TransactionContext';
+import { TransactionContext, type DefaultValue } from '../context/TransactionContext';
 
 interface InputProps extends InputHTMLAttributes<Text> {
   placeholder: string;
@@ -25,17 +26,14 @@ const Input = ({ placeholder, name, type, value, handleChange }: InputProps): JS
 );
 
 const Welcome = (): JSX.Element => {
-  const { connectWallet, currentAccount } = useContext(TransactionContext) as defaultValue;
+  const { connectWallet, currentAccount, formData, setFormData, handleChange, sendTransaction } = useContext(TransactionContext) as DefaultValue;
 
-  console.log({
-    connectWallet
-  });
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const { addressTo, amount, keyword, message } = formData;
+    e.preventDefault();
 
-  const handleChangeInput = () => {
-
-  };
-  const handleSubmit = () => {
-
+    if (!addressTo || !amount || !message || !keyword) return;
+    void sendTransaction();
   };
 
   const isLoading = false;
@@ -98,10 +96,10 @@ const Welcome = (): JSX.Element => {
               </div>
             </div>
             <div className='p-5 sm:w-96 w-full flex flex-col justify-start items-center blue-glassmorphism'>
-              <Input placeholder='Address To' name='addressTo' type='text' handleChange={handleChangeInput} />
-              <Input placeholder='Amount (ETH)' name='amount' type='number' handleChange={handleChangeInput} />
-              <Input placeholder='Keyword (Gif)' name='keyword' type='text' handleChange={handleChangeInput} />
-              <Input placeholder='Enter message' name='message' type='text' handleChange={handleChangeInput} />
+              <Input placeholder='Address To' name='addressTo' type='text' handleChange={handleChange} />
+              <Input placeholder='Amount (ETH)' name='amount' type='number' handleChange={handleChange} />
+              <Input placeholder='Keyword (Gif)' name='keyword' type='text' handleChange={handleChange} />
+              <Input placeholder='Enter message' name='message' type='text' handleChange={handleChange} />
               <div className='h-[1px] w-full bg-gray-400 my-2' />
               {isLoading
                 ? <Loader />
