@@ -3,7 +3,8 @@
     "include": [
       "src",
       "smart_contracts",
-      ".eslintrc.js"
+      ".eslintrc.js",
+      "vite.config.js"
     ],
-    "exclude": ["vite.config.ts"]
+    "exclude": []
   }
