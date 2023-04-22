@@ -13,6 +13,7 @@ module.exports = {
     extends: ['plugin:react/jsx-runtime', 'plugin:react/recommended'],
     rules: {
       'react/react-in-jsx-scope': 0,
+      '@typescript-eslint/explicit-function-return-type': 'warn',
       '@typescript-eslint/restrict-template-expressions': 'warn'
     }
   }],
@@ -45,7 +46,7 @@ module.exports = {
         requireLast: true
       }
     }],
-    '@typescript-eslint/explicit-function-return-type': 'warn',
+    '@typescript-eslint/explicit-function-return-type': 'off',
     'no-multiple-empty-lines': ['error', { max: 2, maxEOF: 1 }],
     'react/react-in-jsx-scope': 'off',
     '@typescript-eslint/strict-boolean-expressions': 'off'
