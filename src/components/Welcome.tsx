@@ -1,10 +1,10 @@
 import type React from 'react';
-import { type ChangeEvent, type EventHandler, type InputHTMLAttributes, type ChangeEventHandler, useContext } from 'react';
-import { AiFillPlayCircle } from 'react-icons/ai';
-import { SiE, SiEthereum } from 'react-icons/si';
+import { type ChangeEvent, type InputHTMLAttributes, useContext } from 'react';
+import { SiEthereum } from 'react-icons/si';
 import { BsInfoCircle } from 'react-icons/bs';
 import { Loader } from './';
 import { TransactionContext, type DefaultValue } from '../context/TransactionContext';
+import { shortenAddress } from '../utils/shortenAddress';
 
 interface InputProps extends InputHTMLAttributes<Text> {
   placeholder: string;
@@ -26,7 +26,7 @@ const Input = ({ placeholder, name, type, value, handleChange }: InputProps): JS
 );
 
 const Welcome = (): JSX.Element => {
-  const { connectWallet, currentAccount, formData, setFormData, handleChange, sendTransaction } = useContext(TransactionContext) as DefaultValue;
+  const { connectWallet, currentAccount, formData, handleChange, sendTransaction, isLoading } = useContext(TransactionContext) as DefaultValue;
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     const { addressTo, amount, keyword, message } = formData;
@@ -36,7 +36,6 @@ const Welcome = (): JSX.Element => {
     void sendTransaction();
   };
 
-  const isLoading = false;
   return (
     <div className='flex w-full items-center justify-center'>
       <div className='flex mf:flex-row flex-col items-start justify-between md:p-20 py-12 px-4'>
@@ -87,7 +86,7 @@ const Welcome = (): JSX.Element => {
                 </div>
                 <div>
                   <p className='text-white font-light text-sm'>
-                    {currentAccount.slice(0, 8)}
+                    {shortenAddress(currentAccount)}
                   </p>
                   <p className='text-white font-semibold text-lg mt-1'>
                     Ethereum

@@ -1,5 +1,5 @@
-import { type Contract, ethers, Transaction, ContractTransaction, ContractFunction, ContractInterface, type BaseContract, ContractReceipt, type BigNumber } from 'ethers';
-import React, { Context, ContextType, Dispatch, SetStateAction, SyntheticEvent, useCallback, useEffect, useState } from 'react';
+import { ethers, type BaseContract, type BigNumber } from 'ethers';
+import React, { useEffect, useState } from 'react';
 import { type MetaMaskInpageProvider } from '@metamask/providers';
 
 import { contractAbi, contractAddress } from '../utils/constants';
@@ -13,6 +13,8 @@ export interface DefaultValue {
   setFormData: (values: FormDataValues) => void;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
   sendTransaction: () => Promise<void>;
+  transactions: StructuredTransactionScheme;
+  isLoading: boolean;
 }
 
 interface FormDataValues {
@@ -22,12 +24,33 @@ interface FormDataValues {
   message: string;
 }
 
+interface TransactionScheme {
+  sender: string;
+  receiver: string;
+  amount: number & {
+    _hex: any;
+  };
+  message: string;
+  timestamp: string;
+  keyword: string;
+}
+
+export interface StructuredTransactionScheme {
+  addressTo: string;
+  addressFrom: string;
+  timestamp: string;
+  message: string;
+  keyword: string;
+  amount: number;
+}
+
 interface MyContract extends BaseContract {
   addToBlockchain: (addressTo: string, parsedAmount: BigNumber, message: string, keyword: string) => Promise<TransactionResponse>;
   getTransactionCount: () => Promise<string>;
+  getAllTransactions: () => Promise<TransactionScheme[]>;
 }
 
-export const TransactionContext = React.createContext<DefaultValue | null>(null);
+export const TransactionContext = React.createContext<DefaultValue | Record<string, any>>({});
 
 declare global {
   interface Window {
@@ -49,13 +72,37 @@ export const TransactionProvider = ({ children }: React.PropsWithChildren): JSX.
   const [currentAccount, setCurrentAccount] = useState('');
   const [formData, setFormData] = useState({ addressTo: '', amount: '', keyword: '', message: '' } satisfies FormDataValues);
   const [isLoading, setIsLoading] = useState(false);
-  // const [transactionCount2, setTransactionCount2] = useState(localStorage.getItem('transactionCount') ?? '');
+
+  const [transactions, setTransactions] = useState([] as StructuredTransactionScheme[]);
+  const [transactionCount, setTransactionCount] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, name: string): void => {
     setFormData((prevState) => ({
       ...prevState,
       [name]: e.target.value
     }));
+  };
+
+  const getAllTransactions = async (): Promise<void> => {
+    try {
+      if (!ethereum) {
+        alert('Please install Metamask!'); return;
+      }
+      const transactionContract = getEthereumContract();
+      const availableTransactions = await transactionContract.getAllTransactions();
+      const structuredTransactions = availableTransactions.map((transaction: TransactionScheme): StructuredTransactionScheme => ({
+        addressTo: transaction.receiver,
+        addressFrom: transaction.sender,
+        timestamp: new Date(Number(transaction.timestamp) * 1000).toLocaleString(),
+        message: transaction.message,
+        keyword: transaction.keyword,
+        amount: parseInt(transaction.amount._hex) / (10 ** 18)
+      }));
+
+      setTransactions(structuredTransactions);
+    } catch (error) {
+      throw new Error('');
+    }
   };
 
   const checkIfWalletIsConnected = async (): Promise<void> => {
@@ -67,11 +114,23 @@ export const TransactionProvider = ({ children }: React.PropsWithChildren): JSX.
       const accounts = await ethereum.request({ method: 'eth_accounts' }) as string[];
       if (accounts.length > 0) {
         setCurrentAccount(accounts[0]);
+        void getAllTransactions();
       } else {
         console.log('No accounts found');
       }
     } catch (error) {
       console.log('No ethereum object');
+    }
+  };
+
+  const checkIfTransactionsExist = async (): Promise<void> => {
+    try {
+      const transactionContract = getEthereumContract();
+      const transactionCount = await transactionContract.getTransactionCount();
+
+      window.localStorage.setItem('transactionCount', transactionCount);
+    } catch (error) {
+      throw new Error('No ethereum object');
     }
   };
 
@@ -115,8 +174,10 @@ export const TransactionProvider = ({ children }: React.PropsWithChildren): JSX.
       await transcationHash.wait().then(() => {
         setIsLoading(false);
       });
-      // const transactionCount = await contract.getTransactionCount();
-      // setTransactionCount2(transactionCount);
+      const transactionCount2 = await contract.getTransactionCount();
+      setTransactionCount(transactionCount2);
+
+      window.location.reload();
     } catch (error) {
       console.log(error);
       throw new Error('No ethereum object.');
@@ -125,10 +186,11 @@ export const TransactionProvider = ({ children }: React.PropsWithChildren): JSX.
 
   useEffect(() => {
     void checkIfWalletIsConnected();
+    void checkIfTransactionsExist();
   }, []);
 
   return (
-    <TransactionContext.Provider value={{ connectWallet, currentAccount, formData, setFormData, handleChange, sendTransaction }}>
+    <TransactionContext.Provider value={{ connectWallet, currentAccount, formData, setFormData, handleChange, sendTransaction, transactions, isLoading }}>
         {children}
     </TransactionContext.Provider>
   );
